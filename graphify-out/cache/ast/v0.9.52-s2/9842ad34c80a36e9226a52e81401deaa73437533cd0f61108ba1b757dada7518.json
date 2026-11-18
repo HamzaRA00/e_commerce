@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_app_notifications_ordercreatednotification_php", "label": "OrderCreatedNotification.php", "file_type": "code", "source_file": "app/Notifications/OrderCreatedNotification.php", "source_location": "L1"}], "edges": [], "raw_calls": []}
