@@ -26,6 +26,7 @@ class OrderStatusUpdated implements ShouldBroadcast, ShouldDispatchAfterCommit
     {
         return [
             new PrivateChannel('orders.'.$this->orderId),
+            new PrivateChannel('user.'.$this->userId),
             new PrivateChannel('admin.orders'),
         ];
     }

@@ -29,7 +29,8 @@ class TokenDeviceManagementService
         return new AuthInfoDTO(
             access_token: $this->createAccessTokenForDevice($user, $device, $tokenName),
             refresh_token: $refresh->refresh_token,
-            device: $device->identifier
+            device: $device->identifier,
+            user_id: $user->id
         );
     }
 
@@ -64,7 +65,6 @@ class TokenDeviceManagementService
             return null;
         }
 
-
         $user->tokens()->where('device_id', $device->id)->delete();
 
         $new_refresh = $this->generateRefreshToken();
@@ -76,7 +76,9 @@ class TokenDeviceManagementService
 
         return new AuthInfoDTO(
             $this->createAccessTokenForDevice($user, $device, TokenNameEnum::REFRESH),
-            $new_refresh->refresh_token
+            $new_refresh->refresh_token,
+            $device->identifier,
+            $user->id
         );
     }
 

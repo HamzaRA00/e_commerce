@@ -61,9 +61,17 @@ docker compose exec warehouse_db mysql -uroot -proot warehouse -e "INSERT INTO s
 
 Open your browser and visit:
 
-**E-Commerce Application:**
+**E-Commerce Application (API):**
 
 http://localhost:8000
+
+**Customer App:**
+
+http://localhost:5173
+
+**Admin App:**
+
+http://localhost:5174
 
 **MySQL Database Management Interface:**
 

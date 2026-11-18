@@ -13,6 +13,7 @@ class UserAuthInfoResource extends JsonResource
             'access_token' => $this->resource->access_token,
             'refresh_token' => $this->resource->refresh_token,
             'device' => $this->whenNotNull($this->resource->device),
+            'user_id' => $this->whenNotNull($this->resource->user_id),
         ];
     }
 }

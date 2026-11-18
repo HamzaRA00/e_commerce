@@ -191,12 +191,34 @@ services:
             - "5173:5173"
         environment:
             VITE_PROXY_TARGET: http://web:80
+            VITE_ADMIN_URL: http://localhost:5174
             VITE_REVERB_APP_KEY: luffy
             VITE_REVERB_HOST: localhost
             VITE_REVERB_PORT: 8081
             VITE_REVERB_SCHEME: http
         volumes:
             - ./frontend:/app
+            - /app/node_modules
+        depends_on:
+            - web
+
+    admin:
+        image: ecommerce-admin:local
+        build:
+            context: ./admin
+            dockerfile: Dockerfile
+            target: dev
+        ports:
+            - "5174:5174"
+        environment:
+            VITE_PROXY_TARGET: http://web:80
+            VITE_STOREFRONT_URL: http://localhost:5173
+            VITE_REVERB_APP_KEY: luffy
+            VITE_REVERB_HOST: localhost
+            VITE_REVERB_PORT: 8081
+            VITE_REVERB_SCHEME: http
+        volumes:
+            - ./admin:/app
             - /app/node_modules
         depends_on:
             - web

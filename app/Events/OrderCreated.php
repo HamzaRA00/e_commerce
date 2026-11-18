@@ -16,12 +16,12 @@ class OrderCreated implements ShouldBroadcast, ShouldDispatchAfterCommit
         public int $orderId,
         public int $userId,
         public string $status
-    ) {
-    }
+    ) {}
 
     public function broadcastOn(): array
     {
         return [
+            new PrivateChannel('user.'.$this->userId),
             new PrivateChannel('admin.orders'),
         ];
     }

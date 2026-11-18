@@ -9,7 +9,12 @@ export function getStoredAuth() {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return null;
-    return JSON.parse(raw);
+    const auth = JSON.parse(raw);
+    if (auth?.role !== 'user') {
+      localStorage.removeItem(KEY);
+      return null;
+    }
+    return auth;
   } catch {
     return null;
   }
@@ -29,7 +34,7 @@ export function ensureDeviceId(current) {
   return id;
 }
 
-export function makeAuthState({ role, accessToken, refreshToken, device, email = null, verified = null }) {
+export function makeAuthState({ role, accessToken, refreshToken, device, email = null, verified = null, userId = null }) {
   return {
     role,
     accessToken: accessToken || null,
@@ -37,5 +42,6 @@ export function makeAuthState({ role, accessToken, refreshToken, device, email =
     device: device || ensureDeviceId(null),
     email,
     verified,
+    userId: userId ?? null,
   };
 }

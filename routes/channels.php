@@ -24,6 +24,20 @@ Broadcast::channel('orders.{orderId}', function (
 
 /*
 |--------------------------------------------------------------------------
+| Customer Orders Channel
+|--------------------------------------------------------------------------
+*/
+
+Broadcast::channel('user.{userId}', function (
+    User $user,
+    int $userId
+) {
+    return $user->hasRole(RoleEnum::USER->value)
+        && (int) $user->id === $userId;
+});
+
+/*
+|--------------------------------------------------------------------------
 | Admin Orders Channel
 |--------------------------------------------------------------------------
 */

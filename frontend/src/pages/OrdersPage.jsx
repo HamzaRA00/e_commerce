@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { userOrdersApi } from '../api/endpoints.js';
 import { Alert, Badge, Field, Spinner } from '../components/ui.jsx';
+import { useCustomerRealtime } from '../realtime/CustomerRealtimeContext.jsx';
 import { formatDate, getErrorMessage, normalizeList, pickData } from '../utils/helpers.js';
 
 export default function OrdersPage() {
+  const { revision, connectionState } = useCustomerRealtime();
   const [orders, setOrders] = useState([]);
   const [meta, setMeta] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -27,6 +29,12 @@ export default function OrdersPage() {
   }
 
   useEffect(() => { load(); }, []);
+
+  useEffect(() => {
+    if (!revision) return undefined;
+    const timer = setTimeout(() => { load(); }, 250);
+    return () => clearTimeout(timer);
+  }, [revision]);
 
   async function createOrder(e) {
     e.preventDefault();
@@ -51,7 +59,12 @@ export default function OrdersPage() {
             <h1>My Orders</h1>
             <p className="muted">View your orders and create a new one (requires verified user session per API).</p>
           </div>
-          <button className="btn secondary" onClick={load} disabled={loading}>Refresh</button>
+          <div className="btn-row">
+            <Badge kind={connectionState === 'connected' ? 'ok' : connectionState === 'connecting' ? 'warn' : 'bad'}>
+              {connectionState === 'connected' ? 'Live' : connectionState}
+            </Badge>
+            <button className="btn secondary" onClick={load} disabled={loading}>Refresh</button>
+          </div>
         </div>
         {loading && <Spinner />}
         <Alert kind="error">{error}</Alert>

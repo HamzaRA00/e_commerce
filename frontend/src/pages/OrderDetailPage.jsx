@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { userOrdersApi } from '../api/endpoints.js';
-import { useAuth } from '../auth/AuthContext.jsx';
 import { Alert, Badge, Spinner } from '../components/ui.jsx';
-import { usePrivateChannel, useRealtimeConnection } from '../realtime/usePrivateChannel.js';
+import { useCustomerRealtime } from '../realtime/CustomerRealtimeContext.jsx';
 import { formatDate, getErrorMessage, pickData } from '../utils/helpers.js';
 
 export default function OrderDetailPage() {
   const { id } = useParams();
-  const { isUser } = useAuth();
-  const liveState = useRealtimeConnection();
+  const { connectionState: liveState, lastEvent } = useCustomerRealtime();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [order, setOrder] = useState(null);
@@ -29,15 +27,14 @@ export default function OrderDetailPage() {
     return () => { on = false; };
   }, [id]);
 
-  usePrivateChannel(`orders.${id}`, {
-    '.order.status.updated': (event) => {
-      setOrder((prev) => (prev ? {
-        ...prev,
-        status: event.status,
-        status_label: event.status_label ?? prev.status_label,
-      } : prev));
-    },
-  }, isUser);
+  useEffect(() => {
+    if (lastEvent?.kind !== 'status' || String(lastEvent.order_id) !== String(id)) return;
+    setOrder((prev) => (prev ? {
+      ...prev,
+      status: lastEvent.status,
+      status_label: lastEvent.status_label ?? prev.status_label,
+    } : prev));
+  }, [lastEvent, id]);
 
   return (
     <div className="grid" style={{ gap: 16 }}>

@@ -59,6 +59,7 @@ async function doRefresh() {
     accessToken: payload.access_token || payload.accessToken,
     refreshToken: payload.refresh_token || payload.refreshToken || auth.refreshToken,
     device: payload.device || auth.device,
+    userId: payload.user_id ?? payload.userId ?? auth.userId ?? null,
   };
   handlers.setAuth(next);
   return next;

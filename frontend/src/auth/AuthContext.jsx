@@ -37,8 +37,8 @@ export function AuthProvider({ children }) {
     return {
       auth,
       device,
+      userId: auth?.userId ?? null,
       isAuthenticated: !!auth?.accessToken,
-      isAdmin: auth?.role === 'admin',
       isUser: auth?.role === 'user',
       isVerified: auth?.role === 'user' ? auth?.verified !== false : true,
       setAuth,
